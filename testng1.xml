@@ -1,0 +1,85 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="ParallelSuite" parallel="tests" thread-count="10">
+
+  <test name="Site1">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?394beca0fbb3"/>
+     <parameter name="language" value="हिंदी"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site2">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?5290adc2a7a5"/>
+     <parameter name="language" value="English"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site3">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?e943b74402b2"/>
+     <parameter name="language" value="मराठी"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site4">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?16c859d4e540"/>
+     <parameter name="language" value="कोंकणी"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+  
+  
+  <test name="Site5">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?a202d16bdc22"/>
+     <parameter name="language" value="नेपाली"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site6">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?54fe4c3f189b"/>
+     <parameter name="language" value="हिंदी"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site7">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?0c9c69f178c8"/>
+     <parameter name="language" value="English"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site8">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?cb4a4697233e"/>
+     <parameter name="language" value="मैथिली"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site9">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?954f8009ef68"/>
+     <parameter name="language" value="डोगरी"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+  <test name="Site10">
+    <parameter name="baseUrl" value="https://test.prowessbeat.net/?394beca0fbb3"/>
+     <parameter name="language" value="తెలుగు"/>
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest"/>
+    </classes>
+  </test>
+
+</suite>

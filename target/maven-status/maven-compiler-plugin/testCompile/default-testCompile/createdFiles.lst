@@ -1,0 +1,16 @@
+com\dmiurl\utils\OutlookMailSender.class
+com\dmiurl\utils\OutlookMailSender$1.class
+com\dmiurl\base\BaseClass.class
+com\dmiurl\utils\GenerateDynamicXML.class
+com\dmiurl\testcases\DmiUrlRedirectionTestFinal.class
+com\dmiurl\utils\ExtentReporter.class
+com\dmiurl\utils\Utils.class
+com\dmiurl\testcases\DmiUrlRedirectionTest.class
+com\dmiurl\utils\ConfigReader.class
+com\dmiurl\utils\TestDataCleanup.class
+com\dmiurl\utils\ExcelLogger.class
+com\dmiurl\utils\Credentials.class
+com\dmiurl\utils\GlobalStore.class
+com\dmiurl\utils\ExcelUtils.class
+com\dmiurl\utils\AutomationReportListener.class
+com\dmiurl\utils\TokenManager.class

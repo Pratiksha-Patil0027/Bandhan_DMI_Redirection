@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Selenium Automation">
+  <listeners>
+    <!-- <listener class-name="com.influencer.app.api.utils.ExcelLogger" /> -->
+     <!-- <listener class-name="com.influencer.app.api.utils.AutomationReportListener" /> -->
+  </listeners>
+  <test thread-count="5" name="Test">
+    <classes>
+      <class name="com.dmiurl.testcases.DmiUrlRedirectionTest" />
+    </classes>
+  </test>
+</suite>
