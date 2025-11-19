@@ -1,0 +1,10 @@
+# Maven build output
+target/
+
+# TestNG test reports
+test-output/
+
+# VS Code project settings
+.vscode/
+
+.env
