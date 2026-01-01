@@ -82,6 +82,7 @@ public class AutomationReportListener implements ISuiteListener {
             System.out.println("No reports found — email not sent.");
         }
     }
+    
 
     // Helper: update influencer summary
     private void updateSummary(Map<String, int[]> map, ITestResult result, boolean pass, boolean fail, boolean skip) {

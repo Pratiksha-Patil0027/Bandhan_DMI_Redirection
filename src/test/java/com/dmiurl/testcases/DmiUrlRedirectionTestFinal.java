@@ -162,7 +162,9 @@ public void runParallelDmiUrls() throws Exception {
             } finally {
                 try { driver.quit(); } catch (Exception ignored) {}
             }
+                
         });
+    
     }
 
     executor.shutdown();
