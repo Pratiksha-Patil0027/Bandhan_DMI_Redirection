@@ -5,7 +5,7 @@
     <!-- <listener class-name="com.influencer.app.api.utils.ExcelLogger" /> -->
      <!-- <listener class-name="com.influencer.app.api.utils.AutomationReportListener" /> -->
   </listeners>
-  <test thread-count="5" name="Test">
+  <test thread-count="1" name="Test">
     <classes>
       <class name="com.dmiurl.testcases.DmiUrlRedirectionTest" />
     </classes>
