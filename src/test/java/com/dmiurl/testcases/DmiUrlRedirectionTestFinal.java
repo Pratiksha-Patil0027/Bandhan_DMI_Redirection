@@ -1,6 +1,7 @@
 package com.dmiurl.testcases;
 
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
@@ -20,14 +22,18 @@ import org.testng.annotations.Test;
 
 import com.dmiurl.base.BaseClass;
 import com.dmiurl.pageobjects.HomePage;
+import com.dmiurl.utils.ConfigReader;
 import com.dmiurl.utils.ExcelLogger;
 import com.dmiurl.utils.ExcelUtils;
 import com.dmiurl.utils.Utils;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import java.net.URL;
 
 public class DmiUrlRedirectionTestFinal extends BaseClass {
 
     private List<Map<String, String>> urlList = new ArrayList<>();
     private ExcelLogger excelLogger;
+     protected ConfigReader configReader;
 
     // ----------------------------------------
     // Get HTTP Response Code for URL
@@ -50,8 +56,12 @@ public class DmiUrlRedirectionTestFinal extends BaseClass {
     @BeforeClass
     public void loadExcelData() throws Exception {
 
+         configReader = new ConfigReader();
+        String DEVURLSHEET = configReader.getProperty("DEVURLSHEET");
+          String PRODUCTIONURLSHEET = configReader.getProperty("PRODUCTIONURLSHEET");
+
         String path = System.getProperty("user.dir") + "\\src\\resources\\Bandhan\\DmiUrls.xlsx";
-        ExcelUtils reader = new ExcelUtils(path, "Sheet1");
+        ExcelUtils reader = new ExcelUtils(path, DEVURLSHEET);
         urlList = reader.getTestData();
 
         excelLogger = new ExcelLogger();
@@ -66,7 +76,9 @@ public class DmiUrlRedirectionTestFinal extends BaseClass {
     @Test
     public void runParallelDmiUrls() throws Exception {
 
-        ExecutorService executor = Executors.newFixedThreadPool(urlList.size());
+       // ExecutorService executor = Executors.newFixedThreadPool(urlList.size());
+       ExecutorService executor = Executors.newFixedThreadPool(10);
+
 
         for (Map<String, String> data : urlList) {
 
@@ -92,8 +104,22 @@ public class DmiUrlRedirectionTestFinal extends BaseClass {
                 options.setAcceptInsecureCerts(true);
                 options.addArguments("--disable-http2");
                 options.addArguments("--disable-quic");
+                //options.addArguments("--headless=new");
 
-                WebDriver driver = new ChromeDriver(options);
+                //WebDriver driver = new ChromeDriver(options);
+            WebDriver driver = null;
+
+try {
+    driver = new RemoteWebDriver(
+            new URL("http://localhost:4444"),
+            options
+    );
+} catch (MalformedURLException e) {
+    e.printStackTrace();
+}
+
+              
+
 
                 try {
 
@@ -158,7 +184,11 @@ public class DmiUrlRedirectionTestFinal extends BaseClass {
                     // STEP 2: SECOND BROWSER
                     // =====================================
 
-                    driver = new ChromeDriver(options);
+                   // driver = new ChromeDriver(options);
+                   driver = new RemoteWebDriver(
+        new URL("http://localhost:4444/wd/hub"),
+        options
+);
                     homePage = new HomePage(driver);
                     wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
