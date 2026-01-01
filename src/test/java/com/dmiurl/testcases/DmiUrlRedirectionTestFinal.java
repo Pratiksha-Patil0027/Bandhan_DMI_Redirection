@@ -83,7 +83,7 @@ public class DmiUrlRedirectionTestFinal extends BaseClass {
                 excelLogger.logUrlHit(baseUrl, status, (status == 200 ? "PASS" : "FAIL"), startPreCheck);
 
                 if (status != 200) {
-                    System.out.println("❌ URL Broken → Skipping browser: " + baseUrl);
+                    System.out.println(" URL Broken → Skipping browser: " + baseUrl);
                     return;
                 }
 
@@ -201,4 +201,6 @@ public class DmiUrlRedirectionTestFinal extends BaseClass {
         // FINAL EXCEL REPORT
         excelLogger.generateUrlReport();
     }
+        
 }
+            

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 C:\Users\pratiksha.patil\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\base\BaseClass.java
 C:\Users\pratiksha.patil\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\GlobalStore.java
 C:\Users\pratiksha.patil\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\AutomationReportListener.java
@@ -14,20 +13,3 @@ C:\Users\pratiksha.patil\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\
 C:\Users\pratiksha.patil\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\Credentials.java
 C:\Users\pratiksha.patil\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\ExtentReporter.java
 C:\Users\pratiksha.patil\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\GenerateDynamicXML.java
-=======
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\testcases\DmiUrlRedirectionTest.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\TokenManager.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\ExcelLogger.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\Utils.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\ExcelUtils.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\GlobalStore.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\AutomationReportListener.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\OutlookMailSender.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\testcases\DmiUrlRedirectionTestFinal.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\ExtentReporter.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\TestDataCleanup.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\GenerateDynamicXML.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\ConfigReader.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\base\BaseClass.java
-C:\Users\testing\Documents\Bandhan_DMI_URL_Automation\src\test\java\com\dmiurl\utils\Credentials.java
->>>>>>> 07b3779a06afc82b607d31e61616980149c80942
