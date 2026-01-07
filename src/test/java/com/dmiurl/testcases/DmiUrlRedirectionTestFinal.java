@@ -1,18 +1,20 @@
 package com.dmiurl.testcases;
 
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -25,19 +27,16 @@ import com.dmiurl.pageobjects.HomePage;
 import com.dmiurl.utils.ConfigReader;
 import com.dmiurl.utils.ExcelLogger;
 import com.dmiurl.utils.ExcelUtils;
-import com.dmiurl.utils.Utils;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import java.net.URL;
 
 public class DmiUrlRedirectionTestFinal extends BaseClass {
 
-    private List<Map<String, String>> urlList = new ArrayList<>();
+    private List<Map<String, String>> urlList;
     private ExcelLogger excelLogger;
-     protected ConfigReader configReader;
+    private ConfigReader configReader;
 
-    // ----------------------------------------
-    // Get HTTP Response Code for URL
-    // ----------------------------------------
+    // ==============================
+    // HTTP STATUS CHECK
+    // ==============================
     public int getStatus(String url) {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
@@ -50,103 +49,111 @@ public class DmiUrlRedirectionTestFinal extends BaseClass {
         }
     }
 
-    // ----------------------------------------
-    // LOAD URL LIST + INIT LOGGER
-    // ----------------------------------------
+    // ==============================
+    // ACCEPTED PAGE CHECK
+    // ==============================
+    // ---------------- UI VALIDATION ----------------
+    public boolean isAcceptedPageOpened(WebDriver driver) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
+
+            WebElement okButton = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(
+                            By.xpath( "//*[@id=\"root\"]/div[2]/div/div/button")));
+
+            return okButton.isDisplayed();
+
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    // ==============================
+    // LOAD EXCEL DATA
+    // ==============================
     @BeforeClass
     public void loadExcelData() throws Exception {
 
-         configReader = new ConfigReader();
+        configReader = new ConfigReader();
         String DEVURLSHEET = configReader.getProperty("DEVURLSHEET");
-          String PRODUCTIONURLSHEET = configReader.getProperty("PRODUCTIONURLSHEET");
+        String PRODUCTIONURLSHEET = configReader.getProperty("PRODUCTIONURLSHEET");
 
         String path = System.getProperty("user.dir") + "\\src\\resources\\Bandhan\\DmiUrls.xlsx";
-        ExcelUtils reader = new ExcelUtils(path, DEVURLSHEET);
+        ExcelUtils reader = new ExcelUtils(path, PRODUCTIONURLSHEET);
         urlList = reader.getTestData();
 
         excelLogger = new ExcelLogger();
+        final String dateTime = new SimpleDateFormat("dd-MMM-yyyy HH:mm").format(new Date());
         excelLogger.initUrlLogger(System.getProperty("user.dir") + "/Parallel_URL_Hits.xlsx");
-
-        System.out.println("Loaded " + urlList.size() + " URL entries");
+        System.out.println("Total URLs Loaded: " + urlList.size());
     }
 
-    // ----------------------------------------
-    // MAIN PARALLEL EXECUTION
-    // ----------------------------------------
+    // ==============================
+    // MAIN TEST
+    // ==============================
     @Test
     public void runParallelDmiUrls() throws Exception {
 
-       // ExecutorService executor = Executors.newFixedThreadPool(urlList.size());
-       ExecutorService executor = Executors.newFixedThreadPool(10);
-
+        ExecutorService executor = Executors.newFixedThreadPool(10);
 
         for (Map<String, String> data : urlList) {
 
             executor.submit(() -> {
 
+                WebDriver driver = null;
                 String baseUrl = data.get("DMI_URLS");
                 String language = data.get("LANGUAGE");
 
-                System.out.println("THREAD START → " + baseUrl);
-
-                long startPreCheck = System.currentTimeMillis();
+                long start = System.currentTimeMillis();
                 int status = getStatus(baseUrl);
 
-                excelLogger.logUrlHit(baseUrl, status, (status == 200 ? "PASS" : "FAIL"), startPreCheck);
+                excelLogger.logUrlHit(baseUrl, status,
+                        status == 200 ? "HTTP_PASS" : "HTTP_FAIL",
+                        start);
 
-                if (status != 200) {
-                    System.out.println(" URL Broken → Skipping browser: " + baseUrl);
+                if (status != 200)
                     return;
-                }
 
-                ChromeOptions options = new ChromeOptions();
+                try {
+                    ChromeOptions options = new ChromeOptions();
                 options.addArguments("--incognito");
                 options.setAcceptInsecureCerts(true);
                 options.addArguments("--disable-http2");
                 options.addArguments("--disable-quic");
-                //options.addArguments("--headless=new");
+                    options.setAcceptInsecureCerts(true);
 
-                //WebDriver driver = new ChromeDriver(options);
-            WebDriver driver = null;
+                    driver = new RemoteWebDriver(
+                            new URL("http://localhost:4444"),
+                            options);
 
-try {
-    driver = new RemoteWebDriver(
-            new URL("http://localhost:4444"),
-            options
-    );
-} catch (MalformedURLException e) {
-    e.printStackTrace();
-}
-
-              
-
-
-                try {
-
+                    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
                     HomePage homePage = new HomePage(driver);
-                    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-                    Utils util = new Utils();
 
                     // =====================================
                     // STEP 1: FIRST BROWSER
                     // =====================================
-
-                    long startBrowser1 = System.currentTimeMillis();
-                    excelLogger.logUrlHit(baseUrl, getStatus(baseUrl), "FIRST_VISIT", startBrowser1);
+                    excelLogger.logUrlHit(baseUrl, 200, "FIRST_VISIT",
+                            System.currentTimeMillis());
 
                     driver.navigate().to(baseUrl);
 
+                    if (!isAcceptedPageOpened(driver)) {
+                        excelLogger.logUrlHit(baseUrl, 200,
+                                "FAIL_FIRST_VISIT",
+                                System.currentTimeMillis());
+                        return;
+                    }
+
                     Thread.sleep(5000);
-                    wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
+                   // wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
 
                     homePage.clickOn_Disclaimer_OkButton();
                     Thread.sleep(5000);
-
                     homePage.clickOn_LanguageDropdown();
                     Thread.sleep(3000);
                     homePage.clickOn_LanguageDropdown(language);
-
                     Thread.sleep(7000);
                     homePage.clickOn_AboutUs();
                     Thread.sleep(8000);
@@ -154,19 +161,21 @@ try {
                     Thread.sleep(15000);
                     homePage.clickOn_OurExperience();
 
-                    // LOG reload
-                    long startReload = System.currentTimeMillis();
-                    excelLogger.logUrlHit(baseUrl, getStatus(baseUrl), "RELOAD", startReload);
+                    // =====================================
+                    // RELOAD CHECK
+                    // =====================================
+                    excelLogger.logUrlHit(baseUrl, 200, "SECOND_VISIT",
+                            System.currentTimeMillis());
 
                     driver.navigate().to("about:blank");
                     driver.navigate().to(baseUrl);
-
+ 
                     Thread.sleep(3000);
                     driver.navigate().refresh();
-
+ 
                     Thread.sleep(20000);
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
-
+                    
                     homePage.clickOn_LanguageDropdown();
                     Thread.sleep(5000);
                     homePage.clickOn_LanguageDropdown(language);
@@ -179,26 +188,31 @@ try {
                     homePage.clickOn_OurExperience();
 
                     driver.quit();
-
                     // =====================================
                     // STEP 2: SECOND BROWSER
                     // =====================================
 
-                   // driver = new ChromeDriver(options);
-                   driver = new RemoteWebDriver(
-        new URL("http://localhost:4444/wd/hub"),
-        options
-);
-                    homePage = new HomePage(driver);
-                    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                    driver = new RemoteWebDriver(
+                            new URL("http://localhost:4444"),
+                            options);
 
-                    long startBrowser2 = System.currentTimeMillis();
-                    excelLogger.logUrlHit(baseUrl, getStatus(baseUrl), "SECOND_LAUNCH", startBrowser2);
+                    wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+                    homePage = new HomePage(driver);
+
+                    excelLogger.logUrlHit(baseUrl, 200, "THIRD_VISIT",
+                            System.currentTimeMillis());
 
                     driver.navigate().to(baseUrl);
 
+                    if (!isAcceptedPageOpened(driver)) {
+                        excelLogger.logUrlHit(baseUrl, 200,
+                                "FAIL_THIRD_VISIT",
+                                System.currentTimeMillis());
+                        return;
+                    }
+
                     Thread.sleep(5000);
-                    wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
+                    //wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
 
                     homePage.clickOn_Disclaimer_OkButton();
                     Thread.sleep(5000);
@@ -213,24 +227,31 @@ try {
                     Thread.sleep(5000);
                     homePage.clickOn_OurExperience();
 
-                    driver.quit();
+                    excelLogger.logUrlHit(baseUrl, 200,
+                            "TEST_COMPLETED",
+                            System.currentTimeMillis());
 
-                    System.out.println("COMPLETED → " + baseUrl);
+                              System.out.println("COMPLETED → " + baseUrl);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try { driver.quit(); } catch (Exception ignored) {}
-            }
-        });
-    }
+                } catch (Exception e) {
+                    excelLogger.logUrlHit(baseUrl, 200,
+                            "EXCEPTION - " + e.getMessage(),
+                            System.currentTimeMillis());
+                } finally {
+                    if (driver != null) {
+                        try {
+                            driver.quit();
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }
+
+
+            });
+        }
 
         executor.shutdown();
         executor.awaitTermination(60, TimeUnit.MINUTES);
-
-        // FINAL EXCEL REPORT
         excelLogger.generateUrlReport();
     }
-        
 }
-            

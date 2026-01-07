@@ -214,6 +214,7 @@ public void logUrlHit(String url, int statusCode, String result, long startTimeM
             int rowCount = urlSheet.getLastRowNum() + 1;
 
             Row row = urlSheet.createRow(rowCount);
+             //row.createCell(0).setCellValue(urlType);
             row.createCell(0).setCellValue(url);
             row.createCell(1).setCellValue(statusCode);
             row.createCell(2).setCellValue(result);
@@ -255,7 +256,7 @@ public void generateUrlReport() {
             }
 
             // Auto-size all columns
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 urlSheet.autoSizeColumn(i);
             }
 
@@ -263,7 +264,7 @@ public void generateUrlReport() {
                 urlWorkbook.write(out);
             }
 
-            System.out.println("⭐⭐ URL Log Report Generated → " + urlLogFile);
+            System.out.println(" URL Log Report Generated → " + urlLogFile);
 
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(new File(urlLogFile));

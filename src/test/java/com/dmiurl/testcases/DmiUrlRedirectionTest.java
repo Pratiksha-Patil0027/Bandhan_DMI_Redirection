@@ -128,6 +128,8 @@ public class DmiUrlRedirectionTest extends BaseClass {
 
         driver.quit();
 
+        System.out.println("COMPLETED → " + baseUrl);
+
     }
 
     @DataProvider(name = "excelData")
